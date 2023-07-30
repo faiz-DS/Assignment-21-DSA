@@ -1,0 +1,67 @@
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class DoublyLinkedListNode:
+    def __init__(self, val=0, prev=None, next=None):
+        self.val = val
+        self.prev = prev
+        self.next = next
+
+def binary_tree_to_doubly_linked_list(node, prev_node=None):
+    if not node:
+        return None, prev_node
+
+    # Convert left subtree
+    head, prev_node = binary_tree_to_doubly_linked_list(node.left, prev_node)
+
+    # Convert current node
+    doubly_linked_node = DoublyLinkedListNode(node.val)
+    doubly_linked_node.prev = prev_node
+    if prev_node:
+        prev_node.next = doubly_linked_node
+    prev_node = doubly_linked_node
+
+    # Convert right subtree
+    head, prev_node = binary_tree_to_doubly_linked_list(node.right, prev_node)
+
+    return head if not head else head, prev_node
+
+# Given binary tree
+root = TreeNode(10)
+root.left = TreeNode(5)
+root.right = TreeNode(20)
+root.right.left = TreeNode(30)
+root.right.right = TreeNode(35)
+
+# Convert to a doubly linked list
+doubly_linked_list_head, _ = binary_tree_to_doubly_linked_list(root)
+
+# Print the doubly linked list (forward traversal)
+def print_doubly_linked_list_forward(node):
+    current = node
+    while current:
+        print(current.val, end=" ")
+        current = current.next
+
+# Print the doubly linked list (backward traversal)
+def print_doubly_linked_list_backward(node):
+    current = node
+    while current.next:
+        current = current.next
+    while current:
+        print(current.val, end=" ")
+        current = current.prev
+
+# Print the doubly linked list in both directions
+print_doubly_linked_list_forward(doubly_linked_list_head)
+print()
+print_doubly_linked_list_backward(doubly_linked_list_head)
+
+"""output
+(5 10 30 20 35 
+35 20 30 10 5 
+)"""
